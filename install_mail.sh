@@ -3,7 +3,7 @@ set -e
 
 echo "✅ 开始下载文件..."
 
-# 下载脚本和二进制文件
+# 使用 raw.githubusercontent.com 下载原始文件
 wget -q https://raw.githubusercontent.com/myanxiao/m/main/limit.sh -O limit.sh
 wget -q https://raw.githubusercontent.com/myanxiao/m/main/mailbendi.sh -O mailbendi.sh
 wget -q https://raw.githubusercontent.com/myanxiao/m/main/OneMail_amd64 -O OneMail_amd64
@@ -20,7 +20,7 @@ fi
 
 # 自动处理 CRLF
 echo "🔄 转换脚本换行格式为 Unix..."
-for f in *.sh; do
+for f in mailbendi.sh limit.sh; do
     dos2unix "$f" || sed -i 's/\r$//' "$f"
 done
 
@@ -30,7 +30,7 @@ chmod +x limit.sh
 chmod +x OneMail_amd64
 chmod +x OneMail_arm64
 
-# 运行脚本
+# 执行脚本
 echo "✅ 开始运行 mailbendi.sh..."
 bash mailbendi.sh
 
