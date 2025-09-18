@@ -4,13 +4,15 @@ set -e
 echo "✅ 开始下载文件..."
 
 # 使用 raw.githubusercontent.com 下载原始文件
-wget -q https://raw.githubusercontent.com/myanxiao/m/main/limit.sh -O limit.sh
-wget -q https://raw.githubusercontent.com/myanxiao/m/main/mailbendi.sh -O mailbendi.sh
-wget -q https://raw.githubusercontent.com/myanxiao/m/main/OneMail_amd64 -O OneMail_amd64
-wget -q https://raw.githubusercontent.com/myanxiao/m/main/OneMail_arm64 -O OneMail_arm64
+RAW_URL_BASE="https://raw.githubusercontent.com/myanxiao/m/main"
+
+wget -q "$RAW_URL_BASE/limit.sh" -O limit.sh
+wget -q "$RAW_URL_BASE/mailbendi.sh" -O mailbendi.sh
+wget -q "$RAW_URL_BASE/OneMail_amd64" -O OneMail_amd64
+wget -q "$RAW_URL_BASE/OneMail_arm64" -O OneMail_arm64
 
 echo "✅ 下载完成，开始初始化系统..."
-bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/myanxiao/m/main/LinuxInit.sh')
+bash <(wget --no-check-certificate -qO- "$RAW_URL_BASE/LinuxInit.sh")
 
 # 安装 dos2unix（如果没有）
 if ! command -v dos2unix >/dev/null 2>&1; then
@@ -18,10 +20,11 @@ if ! command -v dos2unix >/dev/null 2>&1; then
     apt update && apt install -y dos2unix
 fi
 
-# 自动处理 CRLF
-echo "🔄 转换脚本换行格式为 Unix..."
+# 强制转换所有脚本换行符为 LF
+echo "🔄 强制转换脚本换行符为 Unix 格式..."
 for f in mailbendi.sh limit.sh; do
-    dos2unix "$f" || sed -i 's/\r$//' "$f"
+    # 再次确保 LF
+    sed -i 's/\r$//' "$f"
 done
 
 # 添加执行权限
